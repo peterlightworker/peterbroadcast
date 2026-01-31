@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"
+  ><head
+    ><title>Augmented-Reality - NXT</title
+    ><meta property="og:title" content="Augmented-Reality - NXT" /><meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" /><meta
+      charset="utf-8" /><meta
+      property="twitter:card"
+      content="summary_large_image" /><style data-tag="reset-style-sheet">
+      html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }</style
+    ><style data-tag="default-style-sheet">
+      html {
+        font-family: Inter;
+        font-size: 16px;
+      }
+
+      body {
+        font-weight: 400;
+        font-style:normal;
+        text-decoration: none;
+        text-transform: none;
+        letter-spacing: normal;
+        line-height: 1.15;
+        color: var(--dl-color-gray-black);
+        background-color: var(--dl-color-gray-white);
+
+      }</style
+    ><link
+      rel="stylesheet"
+      href="https://unpkg.com/animate.css@4.1.1/animate.css" /><link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+      data-tag="font" /><link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+      data-tag="font" /><link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+      data-tag="font" /><link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&amp;display=swap"
+      data-tag="font" /><link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+      data-tag="font" /><link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+      data-tag="font" /><link
+      rel="stylesheet"
+      href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css" /><!--This is the head section-->
+    <!-- <style> ... </style> -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/blaze-slider@latest/dist/blaze.css" /></head
+  ><body
+    ><link rel="stylesheet" href="./style.css" /><div
+      ><link href="./augmented-reality.css" rel="stylesheet" /><div
+        class="augmented-reality-container"
+        ><div class="augmented-reality-hamburger"
+          ><img
+            alt="image"
+            src="public/hamburger.svg"
+            class="augmented-reality-icon" /></div
+        ><div
+          data-thq="thq-burger-menu"
+          class="augmented-reality-burger-menu"
+        ></div
+        ><img
+          alt="image"
+          src="public/nxt%20logo%20websiter-200h.png"
+          class="augmented-reality-image" /><div class="augmented-reality-blog"
+          ><div class="augmented-reality-container1"
+            ><div
+              class="blog-post-card3-blog-post-card blog-post-card3-root-class-name1"
+              ><video
+                src="https://videodream.s3.eu-north-1.amazonaws.com/AR_2.mp4?response-content-disposition=inline&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBkaCmV1LW5vcnRoLTEiRzBFAiEAkhQmkPX9crcNeDIb4q%2Bx1XfGq1MTDHiDZb3a6hmBsN8CIEVBTDV6bradnPiTogB89HpOUjNLg88cnEQO6PtOAMnBKuQCCGIQABoMMzgxNDkyMjY3MTY2Igx9TSA%2Ba7Lt%2BuO0WWsqwQJRucR4%2FOGSR63Qxas2lEpXUVVYCoeKfHK5tUAMUjBnUwoWBN%2FBOr6%2BklMk87WRN4bkCVOEWl1Tpfd3%2BYHmwfp9BrcIGNJ8gXy2ivnf8FlyiyjnOmyA3TdEfckWQuywpBAxZUQELDOfLqiNS5IllzfNYn8iDFEn5ALmMdISzZRx9LzgLMziw%2FOkl2hEe2AAmtnV9veDS3m3lHOWGC8rtF7Vm0NraieeF58FwepU0Xe3pjbz4F8v63icy7hX91ZxywNdmfY7AnJH0mA9B%2FOvNbUZhIalBuqrqbX6zvvIxPLqSdKGMrAqEbdWs8v5guKvM0O9062VmkyIvTIKdPm2RzOIjtnANlBTj8N8U2V74SJoJ%2BY8QYx0FKrUAZpxL%2FqesEtRQ3od6SeDvv470SEMlY00xSiDfGuNjZ1vQKQOFIr%2FXLswrLGasQY6swI8nJT7ZWgtZL6gR6MPpVf%2B1xpRPla%2FWXEZLNBlXULE1RsVrhtROP1KIRu4Mt%2FwfQGxrqSMSAHULeeaQNvhgD9U3QkyGFcSVwEFxWq7aSNzMebtpA3kTYJtD4%2BpIu2ENP8ezKwSg8ew1r%2BV4yEWbz%2F%2BiLS5XkyUOkdvzhRuv3d2Y0ofKR6a5I7cer71ELqJdtS8OVkpynGl3Jhxr9sq2bpF0XvliEURzfBfb9T%2BTBZVWMlYaziyafxIT2TDCDsTSyWlLyes3oTX3cNgLSg1ZDFgZOgLPd7RHtjGYdHuyr1CeG6IRPG8YNhFp9FVCx922eFh4oCR%2Bsrx%2FPgkTAQ8a1U0YbB47KADwOre9m%2Fya0xgWJbFsMt25KN4kliH8xDpw0objoXgNNr5xi3XCitKR3%2F%2B%2FOM0&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20240422T182150Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=300&amp;X-Amz-Credential=ASIAVRUVWBCPCR5BCSLK%2F20240422%2Feu-north-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=ec4580763a23579b96065af7925d3df8101bb30cbe5253fff347d21cc584d8f4"
+                poster="public/project%20name-600h.png"
+                class="blog-post-card3-video"
+              ></video
+              ><div class="blog-post-card3-container"
+                ><span class="blog-post-card3-text"
+                  ><span>AUGMENTED REALITY</span></span
+                ><h1 class="blog-post-card3-text1"
+                  ><span
+                    >Augmented Reality: Transforming Live Events into Immersive
+                    Experiences</span
+                  ></h1
+                ><div class="blog-post-card3-container1"
+                  ><span class="blog-post-card3-text2"
+                    ><span
+                      >In the realm of live events, Augmented Reality (AR) is
+                      revolutionising the way we interact with the world around
+                      us. AR technology overlays digital information onto the
+                      physical environment, enhancing the sensory experience of
+                      attendees in real-time. From concerts to sports games, AR
+                      adds an extra layer of excitement. Imagine watching a
+                      football match where stats and player bios are projected
+                      onto the field, or attending a concert where virtual set
+                      pieces change dynamically with the music. The
+                      possibilities are endless. Moreover, AR facilitates
+                      greater engagement. At trade shows, for instance, products
+                      can be explored in 3D, allowing for a deeper understanding
+                      and connection. This interactive element not only
+                      entertains but also educates, making information retention
+                      more likely. The implementation of AR is also a boon for
+                      accessibility. Those with hearing impairments can receive
+                      live captions, and language barriers are broken down with
+                      instant translation overlays. As AR technology advances,
+                      make all of this more accessible for event organisers. The
+                      future of live events is here, and it’s augmented. With
+                      AR, every event is an opportunity to create unforgettable,
+                      personalised experiences that resonate long after the
+                      final curtain call.</span
+                    ></span
+                  ></div
+                ><span class="blog-post-card3-text3"
+                  ><span>by Peter C 5 hours ago</span></span
+                ></div
+              ></div
+            ></div
+          ><div class="augmented-reality-container2"></div></div></div
+    ></div>
+    <script src="https://unpkg.com/blaze-slider@latest/dist/blaze-slider.min.js"></script
+    ><script
+      defer=""
+      src="https://unpkg.com/@teleporthq/teleport-custom-scripts"
+    ></script></body
+></html>

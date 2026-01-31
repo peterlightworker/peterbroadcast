@@ -1,0 +1,18 @@
+.line-line {
+  width: 32px;
+  height: 1px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+
+@media(max-width: 991px) {
+  .line-root-class-name {
+    top: 11px;
+    left: 276px;
+    position: absolute;
+  }
+}
