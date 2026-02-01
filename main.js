@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Ensure refresh starts at top (avoid returning to anchored sections)
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
   // --- Navbar scroll effect ---
   const nav = document.getElementById('nav');
   const handleNavScroll = () => {
@@ -236,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (autoAdvanceInterval || userPaused) return;
       autoAdvanceInterval = setInterval(() => {
         goToIndex(activeIndex + 1);
-      }, 5000);
+      }, 20000);
     };
 
     const stopAutoAdvance = () => {
@@ -337,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chatDates.classList.add('chat-hidden');
     };
 
-    const setActiveInput = (step) => {
+    const setActiveInput = (step, shouldFocus = true) => {
       hideAllInputs();
       if (!step) return;
       if (step.input === chatInput) {
@@ -345,23 +350,23 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInput.autocomplete = step.autocomplete || 'on';
         chatInput.value = '';
         chatInput.classList.remove('chat-hidden');
-        chatInput.focus();
+        if (shouldFocus) chatInput.focus();
       } else if (step.input === chatSelect) {
         chatSelect.value = '';
         chatSelect.classList.remove('chat-hidden');
-        chatSelect.focus();
+        if (shouldFocus) chatSelect.focus();
       } else if (step.input === chatTextarea) {
         chatTextarea.value = '';
         chatTextarea.classList.remove('chat-hidden');
-        chatTextarea.focus();
+        if (shouldFocus) chatTextarea.focus();
       } else if (step.input === chatOtherService) {
         chatOtherService.value = '';
         chatOtherService.classList.remove('chat-hidden');
-        chatOtherService.focus();
+        if (shouldFocus) chatOtherService.focus();
       } else if (step.input === chatDates) {
         chatDates.value = '';
         chatDates.classList.remove('chat-hidden');
-        chatDates.focus();
+        if (shouldFocus) chatDates.focus();
       }
     };
 
@@ -502,7 +507,11 @@ document.addEventListener('DOMContentLoaded', () => {
     chatNext.addEventListener('click', handleNext);
 
     addMessage(steps[0].prompt, 'bot');
-    setActiveInput(steps[0]);
+    const contactSection = document.getElementById('contact');
+    const shouldFocus = contactSection
+      ? contactSection.getBoundingClientRect().top < window.innerHeight * 0.6
+      : false;
+    setActiveInput(steps[0], shouldFocus);
   }
 
   // --- Scroll to top ---
