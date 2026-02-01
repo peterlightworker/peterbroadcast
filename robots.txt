@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peterbroadcast.com/sitemap.xml

@@ -147,61 +147,95 @@ document.addEventListener('DOMContentLoaded', () => {
   const dotsContainer = document.getElementById('testimonialDots');
 
   if (track && dotsContainer) {
-    const cards = track.querySelectorAll('.testimonial-card');
-    const getGap = () => {
-      const styles = window.getComputedStyle(track);
-      const gapValue = parseFloat(styles.columnGap || styles.gap || '0');
-      return Number.isFinite(gapValue) ? gapValue : 0;
+    const cards = Array.from(track.querySelectorAll('.testimonial-card'));
+    let activeIndex = 0;
+    let autoAdvanceInterval = null;
+    let userPaused = false;
+
+    const updateTrackHeight = () => {
+      const activeCard = cards[activeIndex];
+      if (activeCard) {
+        track.style.height = `${activeCard.offsetHeight}px`;
+      }
     };
 
-    const scrollToIndex = (index, behavior = 'smooth') => {
-      const gap = getGap();
-      const cardWidth = cards[0].offsetWidth + gap;
-      track.scrollTo({ left: index * cardWidth, behavior });
+    const updateClasses = () => {
+      cards.forEach((card, index) => {
+        card.classList.remove(
+          'is-active',
+          'is-prev',
+          'is-next',
+          'is-far-prev',
+          'is-far-next',
+          'is-hidden'
+        );
+
+        if (index === activeIndex) {
+          card.classList.add('is-active');
+          return;
+        }
+
+        if (index === (activeIndex - 1 + cards.length) % cards.length) {
+          card.classList.add('is-prev');
+          return;
+        }
+
+        if (index === (activeIndex + 1) % cards.length) {
+          card.classList.add('is-next');
+          return;
+        }
+
+        if (index === (activeIndex - 2 + cards.length) % cards.length) {
+          card.classList.add('is-far-prev');
+          return;
+        }
+
+        if (index === (activeIndex + 2) % cards.length) {
+          card.classList.add('is-far-next');
+          return;
+        }
+
+        card.classList.add('is-hidden');
+      });
+
+      const dots = dotsContainer.querySelectorAll('.testimonial-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === activeIndex);
+      });
+
+      updateTrackHeight();
     };
+
+    const goToIndex = (index) => {
+      activeIndex = (index + cards.length) % cards.length;
+      updateClasses();
+    };
+
+    cards.forEach((card, index) => {
+      card.addEventListener('click', () => {
+        if (index === activeIndex) {
+          goToIndex(activeIndex + 1);
+          return;
+        }
+        goToIndex(index);
+      });
+    });
 
     cards.forEach((_, i) => {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.classList.add('testimonial-dot');
-      if (i === 0) dot.classList.add('active');
       dot.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
       dot.addEventListener('click', () => {
-        scrollToIndex(i);
+        goToIndex(i);
       });
       dotsContainer.appendChild(dot);
     });
 
-    const dots = dotsContainer.querySelectorAll('.testimonial-dot');
-
-    const updateDots = () => {
-      const gap = getGap();
-      const cardWidth = cards[0].offsetWidth + gap;
-      const activeIndex = Math.round(track.scrollLeft / cardWidth);
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === activeIndex);
-      });
-    };
-
-    track.addEventListener('scroll', updateDots, { passive: true });
-    window.addEventListener('resize', updateDots);
-
-    requestAnimationFrame(() => {
-      scrollToIndex(0, 'auto');
-      updateDots();
-    });
-
-    let autoAdvanceInterval = null;
-    let userPaused = false;
-
     const startAutoAdvance = () => {
       if (autoAdvanceInterval || userPaused) return;
       autoAdvanceInterval = setInterval(() => {
-        const gap = getGap();
-        const cardWidth = cards[0].offsetWidth + gap;
-        const currentIndex = Math.round(track.scrollLeft / cardWidth);
-        const nextIndex = (currentIndex + 1) % cards.length;
-        scrollToIndex(nextIndex);
+        goToIndex(activeIndex + 1);
       }, 5000);
     };
 
@@ -235,6 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
     track.addEventListener('pointerdown', pauseAutoAdvance);
     track.addEventListener('wheel', pauseAutoAdvance, { passive: true });
     track.addEventListener('mouseenter', pauseAutoAdvance);
+
+    updateClasses();
+    window.addEventListener('resize', updateTrackHeight);
   }
 
   // --- Web3Forms contact form ---
@@ -244,16 +281,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatInput = document.getElementById('chatInput');
   const chatSelect = document.getElementById('chatSelect');
   const chatTextarea = document.getElementById('chatTextarea');
+  const chatOtherService = document.getElementById('chatOtherService');
   const chatDates = document.getElementById('chatDates');
   const chatNext = document.getElementById('chatNext');
 
-  if (contactForm && chatWindow && chatInput && chatSelect && chatTextarea && chatDates && chatNext) {
+  if (contactForm && chatWindow && chatInput && chatSelect && chatTextarea && chatOtherService && chatDates && chatNext) {
     contactForm.addEventListener('submit', (e) => e.preventDefault());
 
     const hiddenFields = {
       name: document.getElementById('formName'),
       email: document.getElementById('formEmail'),
       service: document.getElementById('formService'),
+      otherService: document.getElementById('formOtherService'),
       description: document.getElementById('formDescription'),
       dates: document.getElementById('formDates'),
     };
@@ -262,12 +301,25 @@ document.addEventListener('DOMContentLoaded', () => {
       { key: 'name', prompt: 'Hey! What is your name?', type: 'text', input: chatInput, autocomplete: 'name' },
       { key: 'email', prompt: 'Great. What is your email address?', type: 'email', input: chatInput, autocomplete: 'email' },
       { key: 'service', prompt: 'Which service do you need?', type: 'select', input: chatSelect },
+      { key: 'otherService', prompt: 'Tell me the other service you need.', type: 'text', input: chatOtherService, autocomplete: 'off', conditional: (state) => state.service === 'Other' },
       { key: 'description', prompt: 'Tell me about the project.', type: 'textarea', input: chatTextarea },
       { key: 'dates', prompt: 'What are the project dates?', type: 'text', input: chatDates, autocomplete: 'off' },
     ];
 
+    const chatState = {
+      name: '',
+      email: '',
+      service: '',
+      otherService: '',
+      description: '',
+      dates: '',
+    };
+
     let stepIndex = 0;
     let mode = 'collect';
+    const formStartTime = Date.now();
+    let isSending = false;
+    let hasSubmitted = false;
 
     const addMessage = (text, type) => {
       const bubble = document.createElement('div');
@@ -281,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chatInput.classList.add('chat-hidden');
       chatSelect.classList.add('chat-hidden');
       chatTextarea.classList.add('chat-hidden');
+      chatOtherService.classList.add('chat-hidden');
       chatDates.classList.add('chat-hidden');
     };
 
@@ -301,6 +354,10 @@ document.addEventListener('DOMContentLoaded', () => {
         chatTextarea.value = '';
         chatTextarea.classList.remove('chat-hidden');
         chatTextarea.focus();
+      } else if (step.input === chatOtherService) {
+        chatOtherService.value = '';
+        chatOtherService.classList.remove('chat-hidden');
+        chatOtherService.focus();
       } else if (step.input === chatDates) {
         chatDates.value = '';
         chatDates.classList.remove('chat-hidden');
@@ -311,6 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getValue = (step) => {
       if (step.input === chatSelect) return chatSelect.value.trim();
       if (step.input === chatTextarea) return chatTextarea.value.trim();
+      if (step.input === chatOtherService) return chatOtherService.value.trim();
       if (step.input === chatDates) return chatDates.value.trim();
       return chatInput.value.trim();
     };
@@ -343,9 +401,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const handleNext = async () => {
       if (mode === 'send') {
+        if (isSending || hasSubmitted) return;
+        const timeOnForm = Date.now() - formStartTime;
+        if (timeOnForm < 6000) {
+          formStatus.textContent = 'Please take a moment to complete the form before sending.';
+          formStatus.className = 'form-status error';
+          return;
+        }
         chatNext.disabled = true;
         formStatus.textContent = 'Sending...';
         formStatus.className = 'form-status';
+        isSending = true;
         try {
           const formData = new FormData(contactForm);
           const response = await fetch('https://api.web3forms.com/submit', {
@@ -357,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
             addMessage('Thanks for sending! I will be in touch shortly.', 'bot');
             formStatus.textContent = 'Sent successfully.';
             formStatus.classList.add('success');
+            hasSubmitted = true;
             setTimeout(() => {
               window.location.reload();
             }, 30000);
@@ -364,31 +431,56 @@ document.addEventListener('DOMContentLoaded', () => {
             formStatus.textContent = 'Something went wrong. Please try again.';
             formStatus.classList.add('error');
             chatNext.disabled = false;
+            isSending = false;
           }
         } catch (err) {
           formStatus.textContent = 'Network error. Please try again later.';
           formStatus.classList.add('error');
           chatNext.disabled = false;
+          isSending = false;
         }
         return;
       }
 
-      const step = steps[stepIndex];
+      let step = steps[stepIndex];
+      while (step && step.conditional && !step.conditional(chatState)) {
+        stepIndex += 1;
+        step = steps[stepIndex];
+      }
+      if (!step) {
+        finishCollection();
+        return;
+      }
+
       const value = getValue(step);
       if (!validateValue(step, value)) return;
 
       addMessage(value, 'user');
-      if (hiddenFields[step.key]) {
-        hiddenFields[step.key].value = value;
+      chatState[step.key] = value;
+      if (step.key === 'service') {
+        hiddenFields.service.value = value;
       }
+      if (step.key === 'otherService') {
+        hiddenFields.otherService.value = value;
+      }
+      if (step.key === 'name') hiddenFields.name.value = value;
+      if (step.key === 'email') hiddenFields.email.value = value;
+      if (step.key === 'description') hiddenFields.description.value = value;
+      if (step.key === 'dates') hiddenFields.dates.value = value;
 
       stepIndex += 1;
-      if (stepIndex < steps.length) {
-        addMessage(steps[stepIndex].prompt, 'bot');
-        setActiveInput(steps[stepIndex]);
-      } else {
-        finishCollection();
+      let nextStep = steps[stepIndex];
+      while (nextStep && nextStep.conditional && !nextStep.conditional(chatState)) {
+        stepIndex += 1;
+        nextStep = steps[stepIndex];
       }
+      if (nextStep) {
+        addMessage(nextStep.prompt, 'bot');
+        setActiveInput(nextStep);
+        return;
+      }
+
+      finishCollection();
     };
 
     const handleInputKeydown = (event) => {
@@ -405,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.addEventListener('keydown', handleInputKeydown);
     chatSelect.addEventListener('keydown', handleInputKeydown);
     chatTextarea.addEventListener('keydown', handleInputKeydown);
+    chatOtherService.addEventListener('keydown', handleInputKeydown);
     chatDates.addEventListener('keydown', handleInputKeydown);
     chatNext.addEventListener('click', handleNext);
 

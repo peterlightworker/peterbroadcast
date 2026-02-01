@@ -347,7 +347,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.5rem;
   background: rgba(212, 168, 83, 0.15);
   border: 1px solid rgba(212, 168, 83, 0.3);
   border-radius: 100px;
@@ -357,6 +357,13 @@ section {
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.hero-badge:hover {
+  transform: translateY(-2px);
+  background: rgba(212, 168, 83, 0.25);
+  box-shadow: 0 8px 20px rgba(212, 168, 83, 0.2);
 }
 
 .live-dot {
@@ -379,6 +386,10 @@ section {
 
 .hero h1 .highlight {
   color: var(--accent);
+}
+
+.hero-line {
+  display: block;
 }
 
 .hero-subtitle {
@@ -552,17 +563,18 @@ section {
 }
 
 .broadcaster-logo {
-  height: 30px;
-  width: auto;
-  opacity: 0.5;
-  filter: brightness(0) invert(1);
+  height: 34px;
+  width: 120px;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: none;
   transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
   flex-shrink: 0;
 }
 
 .broadcaster-logo:hover {
   opacity: 1;
-  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(212, 168, 83, 0.4));
+  filter: drop-shadow(0 0 8px rgba(212, 168, 83, 0.4));
   transform: scale(1.1);
 }
 
@@ -961,24 +973,19 @@ section {
 }
 
 .testimonials-track {
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-snap-stop: always;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: 1rem;
-}
-
-.testimonials-track::-webkit-scrollbar {
-  display: none;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  perspective: 1200px;
+  padding: 1rem 0 2.5rem;
 }
 
 .testimonial-card {
-  flex: 0 0 85%;
-  max-width: 500px;
-  scroll-snap-align: start;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(520px, 85vw);
+  transform-style: preserve-3d;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -986,12 +993,51 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  transition: border-color 0.3s ease, transform 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .testimonial-card:hover {
   border-color: rgba(212, 168, 83, 0.3);
-  transform: translateY(-4px);
+  transform: translate(-50%, -6px) scale(1.02);
+}
+
+.testimonial-card.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateZ(0);
+  z-index: 3;
+}
+
+.testimonial-card.is-prev {
+  opacity: 0.7;
+  transform: translateX(calc(-50% - 260px)) translateZ(-120px) rotateY(18deg) scale(0.9);
+  z-index: 2;
+}
+
+.testimonial-card.is-next {
+  opacity: 0.7;
+  transform: translateX(calc(-50% + 260px)) translateZ(-120px) rotateY(-18deg) scale(0.9);
+  z-index: 2;
+}
+
+.testimonial-card.is-far-prev {
+  opacity: 0.35;
+  transform: translateX(calc(-50% - 420px)) translateZ(-240px) rotateY(24deg) scale(0.8);
+  z-index: 1;
+}
+
+.testimonial-card.is-far-next {
+  opacity: 0.35;
+  transform: translateX(calc(-50% + 420px)) translateZ(-240px) rotateY(-24deg) scale(0.8);
+  z-index: 1;
+}
+
+.testimonial-card.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateZ(-320px) scale(0.6);
+  z-index: 0;
 }
 
 .testimonial-quote-mark {
@@ -1445,7 +1491,7 @@ section {
   }
 
   .testimonial-card {
-    flex: 0 0 60%;
+    width: min(560px, 70vw);
   }
 
   .contact-layout {
@@ -1474,7 +1520,7 @@ section {
   }
 
   .testimonial-card {
-    flex: 0 0 400px;
+    width: 520px;
   }
 }
 
@@ -1501,11 +1547,28 @@ section {
   }
 
   .broadcaster-logo {
-    height: 22px;
+    height: 24px;
+    width: 100px;
   }
 
   .events-grid {
     grid-template-columns: 1fr;
+  }
+
+  .testimonial-card.is-prev {
+    transform: translateX(calc(-50% - 170px)) translateZ(-120px) rotateY(12deg) scale(0.88);
+  }
+
+  .testimonial-card.is-next {
+    transform: translateX(calc(-50% + 170px)) translateZ(-120px) rotateY(-12deg) scale(0.88);
+  }
+
+  .testimonial-card.is-far-prev {
+    transform: translateX(calc(-50% - 260px)) translateZ(-220px) rotateY(16deg) scale(0.78);
+  }
+
+  .testimonial-card.is-far-next {
+    transform: translateX(calc(-50% + 260px)) translateZ(-220px) rotateY(-16deg) scale(0.78);
   }
 
   .chat-input {
